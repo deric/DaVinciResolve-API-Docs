@@ -24,12 +24,11 @@ url: "https://deric.github.io/DaVinciResolve-API-Docs" # the base hostname & pro
 encoding: UTF-8
 
 # Build settings
-#markdown: kramdown
+markdown: kramdown
 source: docs
 #theme: slate
 plugins:
-  - jekyll-feed
-  - jekyll-asciidoc
+# - jekyll-feed
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

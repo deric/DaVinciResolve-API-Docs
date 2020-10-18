@@ -3,7 +3,6 @@ GEM
   specs:
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    asciidoctor (2.0.10)
     colorator (1.1.0)
     concurrent-ruby (1.1.7)
     em-websocket (0.5.2)
@@ -31,9 +30,6 @@ GEM
       pathutil (~> 0.9)
       rouge (>= 1.7, < 4)
       safe_yaml (~> 1.0)
-    jekyll-asciidoc (3.0.0)
-      asciidoctor (>= 1.5.0)
-      jekyll (>= 3.0.0)
     jekyll-feed (0.15.1)
       jekyll (>= 3.7, < 5.0)
     jekyll-github-metadata (2.13.0)
@@ -99,7 +95,6 @@ PLATFORMS
 
 DEPENDENCIES
   jekyll (~> 3.9.0)
-  jekyll-asciidoc
   jekyll-feed (~> 0.6)
   jekyll-theme-primer
   jekyll-theme-slate

@@ -1,23 +1,19 @@
 ---
-permalink: /
-title: Unofficial DaVinci Resolve Scripting Documentation
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+layout: home
 ---
 
 
-= Unofficial DaVinci Resolve Scripting Documentation
-:icons: font
-:toc:
+# Unofficial DaVinci Resolve Scripting Documentation
+
+## About This Document
+This document is a formatted copy of the official BlackmagicDesign DaVinci Resolve scripting documentation.
 
 
-== About This Document
-This document is a formatted copy of the official BlackmagicDesign DaVinci Resolve scripting documentation. +
-
-
-WARNING: Keep in mind that this document might contain errors and might not be up to date with the current Resolve version. +
+WARNING: Keep in mind that this document might contain errors and might not be up to date with the current Resolve version.
 If in doubt, always consult the official Resolve documentation provided by BlackmagicDesign.
-
-
-<<<
 
 
 In this package, you will find a brief introduction to the Scripting API for DaVinci Resolve Studio. Apart from this README.txt file, this package contains folders containing the basic import
@@ -25,21 +21,19 @@ modules for scripting access (DaVinciResolve.py) and some representative example
 
 From v16.2.0 onwards, the nodeIndex parameters accepted by SetLUT() and SetCDL() are 1-based instead of 0-based, i.e. 1 <= nodeIndex <= total number of nodes.
 
-
-
-== Overview
+## Overview
 
 As with Blackmagic Design Fusion scripts, user scripts written in Lua and Python programming languages are supported. By default, scripts can be invoked from the Console window in the Fusion page,
 or via command line. This permission can be changed in Resolve Preferences, to be only from Console, or to be invoked from the local network. Please be aware of the security implications when
 allowing scripting access from outside of the Resolve application.
 
-== Basic Resolve API
+## Basic Resolve API
 
-=== Resolve
+### Resolve
 
-[options="header"]
-|===
+|---
 | Method               | Return Type      | Comment
+|---
 | `Fusion()`           | `Fusion`         | Returns the Fusion object. Starting point for Fusion scripts.
 | `GetMediaStorage()`  | `MediaStorage`   | Returns media storage object to query and act on media locations.
 | `GetProjectManager()`| `ProjectManager` | Returns project manager object for currently open database.
@@ -47,11 +41,12 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
-=== ProjectManager
 
-[options="header"]
-|===
+### ProjectManager
+
+|---
 | Method                                  | Return Type        | Comment
+|---
 |`CreateProject(projectName)`             |`Project`           | Creates and returns a project if projectName (text) is unique, and None if it is not.
 |`DeleteProject(projectName)`             |`Bool`              | Delete project in the current folder if not currently loaded.
 |`LoadProject(projectName)`               |`Project`           | Loads and returns the project with name = projectName (text) if there is a match found, and None if there is no matching Project.
@@ -69,11 +64,11 @@ allowing scripting access from outside of the Resolve application.
 |`RestoreProject(filePath)`              |`Bool`               | Restores a project under given backup file path. Returns true in case of success.
 |===
 
-=== Project
+### Project
 
-[options="header"]
-|===
+|---
 | Method                                               | Return Type        | Comment
+|---
 |`GetMediaPool()`                                      |`MediaPool`         | Returns the Media Pool object.
 |`GetTimelineCount()`                                  |`int`               | Returns the number of timelines currently present in the project.
 |`GetTimelineByIndex(idx)`                             |`Timeline`          | Returns timeline at the given index, 1 <= idx <= project.GetTimelineCount()
@@ -106,12 +101,12 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
-=== MediaStorage
+### MediaStorage
 
 
-[options="header"]
-|===
+|---
 | Method                                    | Return Type   | Comment
+|---
 |`GetMountedVolumeList()`                    | `[paths...]`  | Returns a list of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.
 |`GetSubFolderList(folderPath)`              | `[paths...]`  | Returns a list of folder paths in the given absolute folder path.
 |`GetFileList(folderPath)`                   | `[paths...]`  | Returns a list of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.
@@ -121,10 +116,11 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
-=== MediaPool
-[options="header"]
-|===
+### MediaPool
+
+|---
 | Method                                          | Return Type     | Comment
+|---
 |`GetRootFolder()`                                |`Folder`    |Returns the root Folder of Media Pool
 |`AddSubFolder(folder, name)`                     |`Folder`    |Adds a new subfolder under specified Folder object with the given name.
 |`CreateEmptyTimeline(name)`                      |`Timeline`  |Adds a new timeline with given name.
@@ -143,26 +139,27 @@ allowing scripting access from outside of the Resolve application.
 |`MoveFolders([folders], targetFolder)`           |`Bool`  |Moves specified folders to target folder.
 |===
 
-=== Folder
+### Folder
 
-[options="header"]
-|===
+|---
 | Method                  | Return Type   | Comment
+|---
 | `GetClipList()`         |`[clips...]`   |Returns a list of clips (items) within the folder.
 | `GetName()`             |`string`       |Returns user-defined name of the folder.
 | `GetSubFolderList()`    |`[folders...]` |Returns a list of subfolders in the folder.
 |===
 
 
-=== MediaPoolItem
-[options="header"]
-|===
+### MediaPoolItem
+
+|---
 | Method                                           | Return Type      | Comment
+|---
 |`GetMetadata(metadataType)`                       |`{metadata}`      | Returns a dict (metadata type -> metadata value). If parameter is not specified returns all set metadata parameters.
 |`SetMetadata(metadataType, metadataValue)`        |`Bool`            | Sets metadata by given type and value. Returns True if successful.
 |`GetMediaId()`                                    |`string`          | Returns a unique ID name related to MediaPoolItem.
 |`AddMarker(frameId, color, name, note, duration)` |`Bool`            | Creates a new marker at given frameId position and with given marker information.
-|`GetMarkers()`                                    |`{markers...}`    | Returns a dict (frameId -> {information}) of all markers and dicts with their information. Example of output format: `{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, ...}` In the above example - there is one `Green` marker at offset 96 (position of the marker)
+|`GetMarkers()`                                    |`{markers...}`    | Returns a dict (frameId -> {information}) of all markers and dicts with their information. Example of output format: `{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, ...}`. In the above example - there is one `Green` marker at offset 96 (position of the marker).
 |`DeleteMarkersByColor(color)`                      |`Bool`             | Delete all markers of the specified color from the media pool item. "All" as argument deletes all color markers.
 |`DeleteMarkerAtFrame(frameNum)`                    |`Bool`             | Delete marker at frame number from the media pool item.
 |`AddFlag(color)`                                   |`Bool`             | Adds a flag with given color (text).
@@ -176,10 +173,11 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
-=== Timeline
-[options="header"]
-|===
+### Timeline
+
+|---
 | Method                                           | Return Type      | Comment
+|---
 |`GetName()`                                        |`string`           | Returns user-defined name of the timeline.
 |`SetName(timelineName)`                            |`Bool`             | Sets timeline name is timelineName (text) is unique.
 |`GetStartFrame()`                                  |`int`              | Returns frame number at the start of timeline.
@@ -199,10 +197,11 @@ allowing scripting access from outside of the Resolve application.
 |`SetTrackName(trackType, trackIndex, name)`            |`Bool`            | Sets name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 <= trackIndex <= GetTrackCount(trackType).
 |===
 
-=== TimelineItem
-[options="header"]
-|===
+### TimelineItem
+
+|---
 | Method                                           | Return Type      | Comment
+|---
 |`GetName()`                                       |`string`             | Returns a name of the item.
 |`GetDuration()`                                   |`int`                | Returns a duration of item.
 |`GetEnd()`                                        |`int`                | Returns a position of end frame.
@@ -214,7 +213,7 @@ allowing scripting access from outside of the Resolve application.
 |`GetRightOffset()`                                |`int`                | Returns a maximum extension by frame for clip from right side.
 |`GetStart()`                                      |`int`                | Returns a position of first frame.
 |`AddMarker(frameId, color, name, note, duration)` |`Bool`               | Creates a new marker at given frameId position and with given marker information.
-|`GetMarkers()`                                    |`{markers...}`       | Returns a dict (frameId -> {information}) of all markers and dicts with their information. Example of output format: `{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, ...}`. In the above example - there is one 'Green' marker at offset 96 (position of the marker)
+|`GetMarkers()`                                    |`{markers...}`       | Returns a dict (frameId -> {information}) of all markers and dicts with their information. Example of output format: `{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, ...}`. In the above example - there is one 'Green' marker at offset 96 position of the marker)
 |`DeleteMarkersByColor(color)`                        |`Bool`            | Delete all markers of the specified color from the timeline item. "All" as argument deletes all color markers.
 |`DeleteMarkerAtFrame(frameNum)`                      |`Bool`            | Delete marker at frame number from the timeline item.
 |`AddFlag(color)`                                     |`Bool`            | Adds a flag with given color (text).
@@ -236,10 +235,8 @@ allowing scripting access from outside of the Resolve application.
 |`GetMediaPoolItem()`                                 |`MediaPoolItem`   | Returns a corresponding to the timeline item media pool item if it exists.
 |`GetVersionNameList(versionType)`                    |`[names...]`      | Returns a list of version names by provided versionType: 0 - local, 1 - remote.
 |`GetStereoConvergenceValues()`                       |`{keyframes...}`  | Returns a dict (offset -> value) of keyframe offsets and respective convergence values.
-|`GetStereoLeftFloatingWindowParams()`                |`{keyframes...}`  | For the LEFT eye -> returns a dict (offset -> dict) of keyframe offsets and respective floating window params. Value at particular o
-ffset includes the left, right, top and bottom floating window values.
-|`GetStereoRightFloatingWindowParams()`               | `{keyframes...}` | For the RIGHT eye -> returns a dict (offset -> dict) of keyframe offsets and respective floating window params. Value at particular
-offset includes the left, right, top and bottom floating window values.
+|`GetStereoLeftFloatingWindowParams()`                |`{keyframes...}`  | For the LEFT eye -> returns a dict (offset -> dict) of keyframe offsets and respective floating window params. Value at particular offset includes the left, right, top and bottom floating window values.
+|`GetStereoRightFloatingWindowParams()`               | `{keyframes...}` | For the RIGHT eye -> returns a dict (offset -> dict) of keyframe offsets and respective floating window params. Value at particular offset includes the left, right, top and bottom floating window values.
 |`SetLUT(nodeIndex, lutPath)`                         |`Bool`            | Sets LUT on the node mapping the node index provided, 1 <= nodeIndex <= total number of nodes. The lutPath can be a relative path or absolute path. The operation will be successful for valid lut paths that Resolve has already discovered.
 |`SetCDL([CDL map])`                                  |`Bool`            | Keys of map are: "NodeIndex", "Slope", "Offset", "Power", "Saturation", where 1 <= NodeIndex <= total number of nodes. Example python code - `SetCDL({"NodeIndex" : "1", "Slope" : "0.5 0.4 0.2", "Offset" : "0.4 0.3 0.2", "Power" : "0.6 0.7 0.8", "Saturation" : "0.65"})`
 |`AddTake(mediaPoolItem, startFrame, endFrame)`       |`Bool`            | Adds a new take to take selector. It will initialise this timeline item as take selector if it's not already one. Arguments startFrame and endFrame are optional, and if not specified the entire clip will be added.
@@ -250,9 +247,10 @@ offset includes the left, right, top and bottom floating window values.
 |`SelectTakeByIndex(idx)`                             |`Bool`            | Selects a take by index, 1 <= idx <= number of takes.
 |`FinalizeTake()`                                     |`Bool`            | Finalizes take selection.
 |`CopyGrades([tgtTimelineItems])`                     |`Bool`            | Copies grade to all the items in tgtTimelineItems list. Returns true on success and false if any error occured.
+|===
 
 
-== Using a script
+## Using a script
 
 DaVinci Resolve needs to be running for a script to be invoked.
 
@@ -260,26 +258,29 @@ For a Resolve script to be executed from an external folder, the script needs to
 You may need to set the these environment variables to allow for your Python installation to pick up the appropriate dependencies as shown below:
 
 Mac OS X:
-----
+
+```bash
 RESOLVE_SCRIPT_API="/Library/Application Support/Blackmagic Design/DaVinci Resolve/Developer/Scripting/"
 RESOLVE_SCRIPT_LIB="/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Libraries/Fusion/fusionscript.so"
 PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
-----
+```
 
 Windows:
-----
+
+```bash
 RESOLVE_SCRIPT_API="%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\Developer\Scripting\"
 RESOLVE_SCRIPT_LIB="C:\Program Files\Blackmagic Design\DaVinci Resolve\fusionscript.dll"
 PYTHONPATH="%PYTHONPATH%;%RESOLVE_SCRIPT_API%\Modules\"
-----
+```
 
 Linux:
-----
+```bash
 RESOLVE_SCRIPT_API="/opt/resolve/Developer/Scripting/"
 RESOLVE_SCRIPT_LIB="/opt/resolve/libs/Fusion/fusionscript.so"
 PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
+```
 (Note: For standard ISO Linux installations, the path above may need to be modified to refer to /home/resolve instead of /opt/resolve)
-----
+
 
 As with Fusion scripts, Resolve scripts can also be invoked via the menu and the Console.
 
@@ -294,35 +295,36 @@ Linux:      /opt/resolve/Fusion/Scripts/Comp/   (or /home/resolve/Fusion/Scripts
 The interactive Console window allows for an easy way to execute simple scripting commands, to query or modify properties, and to test scripts. The console accepts commands in Python 2.7, Python 3.6
 and Lua and evaluates and executes them immediately. For more information on how to use the Console, please refer to the DaVinci Resolve User Manual.
 
-.This example Python script creates a simple project:
-[source, Python]
-----
+This example Python script creates a simple project:
+
+
+```python
 #!/usr/bin/env python
 import DaVinciResolveScript as dvr_script
 resolve = dvr_script.scriptapp("Resolve")
 fusion = resolve.Fusion()
 projectManager = resolve.GetProjectManager()
 projectManager.CreateProject("Hello World")
-----
+```
 
 The resolve object is the fundamental starting point for scripting via Resolve. As a native object, it can be inspected for further scriptable properties - using table iteration and "getmetatable"
 in Lua and dir, help etc in Python (among other methods). A notable scriptable object above is fusion - it allows access to all existing Fusion scripting functionality.
 
 
-== Running DaVinci Resolve in headless mode
+## Running DaVinci Resolve in headless mode
 
 DaVinci Resolve can be launched in a headless mode without the user interface using the -nogui command line option. When DaVinci Resolve is launched using this option, the user interface is disabled.
 However, the various scripting APIs will continue to work as expected.
 
 
 
-== List and Dict Data Structures
+## List and Dict Data Structures
 Beside primitive data types, Resolve's Python API mainly uses list and dict data structures. Lists are denoted by [ ... ] and dicts are denoted by { ... } above.
 As Lua does not support list and dict data structures, the Lua API implements "list" as a table with indices, e.g. { [1] = listValue1, [2] = listValue2, ... }.
 Similarly the Lua API implements "dict" as a table with the dictionary key as first element, e.g. { [dictKey1] = dictValue1, [dictKey2] = dictValue2, ... }.
 
 
-== Looking up Project and Clip properties
+## Looking up Project and Clip properties
 
 This section covers additional notes for the functions "Project:GetSetting", "Project:SetSetting", "MediaPoolItem:GetClipProperty" and "MediaPoolItem:SetClipProperty". These functions are used to get
 and set properties otherwise available to the user through the Project Settings and the Clip Attributes dialogs.
@@ -333,16 +335,17 @@ designed to be easily correlated with parameter names and values in the Resolve 
 Some properties may be read only - these include intrinsic clip properties like date created or sample rate, and properties that can be disabled in specific application contexts (e.g. custom colorspaces
 in an ACES workflow, or output sizing parameters when behavior is set to match timeline)
 
-=== Getting Values
+### Getting Values
 Invoke `Project:GetSetting` or "MediaPoolItem:GetClipProperty" with the appropriate property key. To get a snapshot of all queryable properties (keys and values), you can call "Project:GetSetting" or
 "MediaPoolItem:GetClipProperty" without parameters (or with a NoneType or a blank property key). Using specific keys to query individual properties will be faster. Note that getting a property using an
 invalid key will return a trivial result.
 
-=== Setting Values
+### Setting Values
 Invoke "Project:SetSetting" or "MediaPoolItem:SetClipProperty" with the appropriate property key and a valid value. When setting a parameter, please check the return value to ensure the success of the
 operation. You can troubleshoot the validity of keys and values by setting the desired result from the UI and checking property snapshots before and after the change.
 
-.The following Project properties have specifically enumerated values:
+The following Project properties have specifically enumerated values:
+
 superScale::
 The property value is an enumerated integer between 0 and 3 with these meanings: 0=Auto, 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x. +
 Affects:
@@ -354,7 +357,7 @@ Affects:
 * x = Project:GetSetting('timelineFrameRate') and Project:SetSetting('timelineFrameRate', x)
 
 
-.The following Clip properties have specifically enumerated values:
+The following Clip properties have specifically enumerated values:
 superScale:: The property value is an enumerated integer between 1 and 3 with these meanings: 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x.
 Affects:
 * x = MediaPoolItem:GetClipProperty('Super Scale') and MediaPoolItem:SetClipProperty('Super Scale', x)
