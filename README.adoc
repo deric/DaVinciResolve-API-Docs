@@ -115,6 +115,29 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
+MediaPool
+[options="header"]
+|===
+| Method                                          | Return Type     | Comment
+|`GetRootFolder()`                                |`Folder`    |Returns the root Folder of Media Pool
+|`AddSubFolder(folder, name)`                     |`Folder`    |Adds a new subfolder under specified Folder object with the given name.
+|`CreateEmptyTimeline(name)`                      |`Timeline`  |Adds a new timeline with given name.
+|`AppendToTimeline(clip1, clip2, ...)`            |`Bool`      |Appends specified MediaPoolItem objects in the current timeline. Returns True if successful.
+|`AppendToTimeline([clips])`                      |`Bool`      |Appends specified MediaPoolItem objects in the current timeline. Returns True if successful.
+|`AppendToTimeline([{clipInfo}, ...])`            |`Bool`      |Appends list of clipInfos specified as a dict of "mediaPoolItem", "startFrame" (int), "endFrame" (int).
+|`CreateTimelineFromClips(name, clip1, clip2,...)`|`Timeline`  |Creates a new timeline with specified name, and appends the specified MediaPoolItem objects.
+|`CreateTimelineFromClips(name, [clips])`         |`Timeline`  |Creates a new timeline with specified name, and appends the specified MediaPoolItem objects.
+|`CreateTimelineFromClips(name, [{clipInfo}])`    |`Timeline`  |Creates a new timeline with specified name, appending the list of clipInfos specified as a dict of "mediaPoolItem", "startFrame" (int), "endFrame" (int).
+|`ImportTimelineFromFile(filePath)`               |`Timeline`  |Creates timeline based on parameters within given file.
+|`GetCurrentFolder()`                             |`Folder`    |Returns currently selected Folder.
+|`SetCurrentFolder(Folder)`                       |`Bool`  |Sets current folder by given Folder.
+|`DeleteClips([clips])`                           |`Bool`  |Deletes the specified clips in the media pool
+|`DeleteFolders([subfolders])`                    |`Bool`  |Deletes the specified subfolders in the media pool
+|`MoveClips([clips], targetFolder)`               |`Bool`  |Moves specified clips to target folder.
+|`MoveFolders([folders], targetFolder)`           |`Bool`  |Moves specified folders to target folder.
+|===
+
+
 == Using a script
 
 DaVinci Resolve needs to be running for a script to be invoked.
