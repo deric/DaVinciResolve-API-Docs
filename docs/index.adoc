@@ -1,5 +1,4 @@
 ---
-layout: home
 permalink: /
 title: Unofficial DaVinci Resolve Scripting Documentation
 ---
@@ -200,6 +199,57 @@ allowing scripting access from outside of the Resolve application.
 |`SetTrackName(trackType, trackIndex, name)`            |`Bool`            | Sets name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 <= trackIndex <= GetTrackCount(trackType).
 |===
 
+=== TimelineItem
+[options="header"]
+|===
+| Method                                           | Return Type      | Comment
+|`GetName()`                                       |`string`             | Returns a name of the item.
+|`GetDuration()`                                   |`int`                | Returns a duration of item.
+|`GetEnd()`                                        |`int`                | Returns a position of end frame.
+|`GetFusionCompCount()`                            |`int`                | Returns the number of Fusion compositions associated with the timeline item.
+|`GetFusionCompByIndex(compIndex)`                 |`fusionComp`         | Returns Fusion composition object based on given index. 1 <= compIndex <= timelineItem.GetFusionCompCount()
+|`GetFusionCompNameList()`                         |`[names...]`         | Returns a list of Fusion composition names associated with the timeline item.
+|`GetFusionCompByName(compName)`                   |`fusionComp`         | Returns Fusion composition object based on given name.
+|`GetLeftOffset()`                                 |`int`                | Returns a maximum extension by frame for clip from left side.
+|`GetRightOffset()`                                |`int`                | Returns a maximum extension by frame for clip from right side.
+|`GetStart()`                                      |`int`                | Returns a position of first frame.
+|`AddMarker(frameId, color, name, note, duration)` |`Bool`               | Creates a new marker at given frameId position and with given marker information.
+|`GetMarkers()`                                    |`{markers...}`       | Returns a dict (frameId -> {information}) of all markers and dicts with their information. Example of output format: `{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, ...}`. In the above example - there is one 'Green' marker at offset 96 (position of the marker)
+|`DeleteMarkersByColor(color)`                        |`Bool`            | Delete all markers of the specified color from the timeline item. "All" as argument deletes all color markers.
+|`DeleteMarkerAtFrame(frameNum)`                      |`Bool`            | Delete marker at frame number from the timeline item.
+|`AddFlag(color)`                                     |`Bool`            | Adds a flag with given color (text).
+|`GetFlagList()`                                      |`[colors...]`     | Returns a list of flag colors assigned to the item.
+|`ClearFlags(color)`                                  |`Bool`            | Clears the flag of specified color from an item. If "All" argument is provided, all flags will be cleared.
+|`GetClipColor()`                                     |`string`          | Returns an item color as a string.
+|`SetClipColor(colorName)`                            |`Bool`            | Sets color of an item based on the colorName (string).
+|`ClearClipColor()`                                   |`Bool`            | Clears clip color of an item.
+|`AddFusionComp()`                                    |`fusionComp`      | Adds a new Fusion composition associated with the timeline item.
+|`ImportFusionComp(path)`                             |`fusionComp`      | Imports Fusion composition from given file path by creating and adding a new composition for the item.
+|`ExportFusionComp(path, compIndex)`                  |`Bool`            | Exports Fusion composition based on given index into provided file name path.
+|`DeleteFusionCompByName(compName)`                   |`Bool`            | Deletes Fusion composition by provided name.
+|`LoadFusionCompByName(compName)`                     |`fusionComp`      | Loads Fusion composition by provided name and sets it as active composition.
+|`RenameFusionCompByName(oldName, newName)`           |`Bool`            | Renames Fusion composition by provided name with new given name.
+|`AddVersion(versionName, versionType)`               |`Bool`            | Adds a new Version associated with the timeline item. versionType: 0 - local, 1 - remote.
+|`DeleteVersionByName(versionName, versionType)`      |`Bool`            | Deletes Version by provided name. versionType: 0 - local, 1 - remote.
+|`LoadVersionByName(versionName, versionType)`        |`Bool`            | Loads Version by provided name and sets it as active Version. versionType: 0 - local, 1 - remote.
+|`RenameVersionByName(oldName, newName, versionType)` |`Bool`            | Renames Version by provided name with new given name. versionType: 0 - local, 1 - remote.
+|`GetMediaPoolItem()`                                 |`MediaPoolItem`   | Returns a corresponding to the timeline item media pool item if it exists.
+|`GetVersionNameList(versionType)`                    |`[names...]`      | Returns a list of version names by provided versionType: 0 - local, 1 - remote.
+|`GetStereoConvergenceValues()`                       |`{keyframes...}`  | Returns a dict (offset -> value) of keyframe offsets and respective convergence values.
+|`GetStereoLeftFloatingWindowParams()`                |`{keyframes...}`  | For the LEFT eye -> returns a dict (offset -> dict) of keyframe offsets and respective floating window params. Value at particular o
+ffset includes the left, right, top and bottom floating window values.
+|`GetStereoRightFloatingWindowParams()`               | `{keyframes...}` | For the RIGHT eye -> returns a dict (offset -> dict) of keyframe offsets and respective floating window params. Value at particular
+offset includes the left, right, top and bottom floating window values.
+|`SetLUT(nodeIndex, lutPath)`                         |`Bool`            | Sets LUT on the node mapping the node index provided, 1 <= nodeIndex <= total number of nodes. The lutPath can be a relative path or absolute path. The operation will be successful for valid lut paths that Resolve has already discovered.
+|`SetCDL([CDL map])`                                  |`Bool`            | Keys of map are: "NodeIndex", "Slope", "Offset", "Power", "Saturation", where 1 <= NodeIndex <= total number of nodes. Example python code - `SetCDL({"NodeIndex" : "1", "Slope" : "0.5 0.4 0.2", "Offset" : "0.4 0.3 0.2", "Power" : "0.6 0.7 0.8", "Saturation" : "0.65"})`
+|`AddTake(mediaPoolItem, startFrame, endFrame)`       |`Bool`            | Adds a new take to take selector. It will initialise this timeline item as take selector if it's not already one. Arguments startFrame and endFrame are optional, and if not specified the entire clip will be added.
+|`GetSelectedTakeIndex()`                             |`int`             | Returns the index of currently selected take, or 0 if the clip is not a take selector.
+|`GetTakesCount()`                                    |`int`             | Returns the number of takes in take selector, or 0 if the clip is not a take selector.
+|`GetTakeByIndex(idx)`                                |`{takeInfo...}`   | Returns a dict (keys "startFrame", "endFrame" and "mediaPoolItem") with take info for specified index.
+|`DeleteTakeByIndex(idx)`                             |`Bool`            | Deletes a take by index, 1 <= idx <= number of takes.
+|`SelectTakeByIndex(idx)`                             |`Bool`            | Selects a take by index, 1 <= idx <= number of takes.
+|`FinalizeTake()`                                     |`Bool`            | Finalizes take selection.
+|`CopyGrades([tgtTimelineItems])`                     |`Bool`            | Copies grade to all the items in tgtTimelineItems list. Returns true on success and false if any error occured.
 
 
 == Using a script
