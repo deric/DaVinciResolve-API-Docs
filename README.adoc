@@ -170,6 +170,30 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
+=== Timeline
+[options="header"]
+|===
+| Method                                           | Return Type      | Comment
+|`GetName()`                                        |`string`           | Returns user-defined name of the timeline.
+|`SetName(timelineName)`                            |`Bool`             | Sets timeline name is timelineName (text) is unique.
+|`GetStartFrame()`                                  |`int`              | Returns frame number at the start of timeline.
+|`GetEndFrame()`                                    |`int`              | Returns frame number at the end of timeline.
+|`GetTrackCount(trackType)`                         |`int`              | Returns a number of track based on specified track type ("audio", "video" or "subtitle").
+|`GetItemListInTrack(trackType, index)`             |`[items...]`       | Returns a list of Timeline items on the video or audio track (based on trackType) at specified index. 1 <= index <= GetTrackCount(trackType).
+|`AddMarker(frameId, color, name, note, duration)`  |`Bool`             | Creates a new marker at given frameId position and with given marker information.
+|`GetMarkers()`                                     |`{markers...}`     | Returns a dict (frameId -> {information}) of all markers and dicts with their information. Example of output format: `{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, ...}` In the above example - there is one 'Green' marker at offset 96 (position of the marker)
+|`DeleteMarkersByColor(color)`                           |`Bool`       | Delete all markers of the specified color from the timeline. "All" as argument deletes all color markers.
+|`DeleteMarkerAtFrame(frameNum)`                         |`Bool`       | Delete marker at frame number from the timeline.
+|`ApplyGradeFromDRX(path, gradeMode, item1, item2, ...)` |`Bool`       | Loads a still from given file path (string) and applies grade to Timeline Items with gradeMode (int): 0 - "No keyframes", 1 - "Source Timecode aligned", 2 - "Start Frames aligned".
+|`ApplyGradeFromDRX(path, gradeMode, [items])`           |`Bool`            | Loads a still from given file path (string) and applies grade to Timeline Items with gradeMode (int): 0 - "No keyframes", 1 - "Source Timecode aligned", 2 - "Start Frames aligned".
+|`GetCurrentTimecode()`                                  |`string`          | Returns a string representing a timecode for current position of the timeline, while on Cut, Edit, Color and Deliver page.
+|`GetCurrentVideoItem()`                                 |`item`            | Returns current video timeline item.
+|`GetCurrentClipThumbnailImage()`                        |`{thumbnailData}` | Returns a dict (keys "width", "height", "format" and "data") with data containing raw thumbnail image data (RGB 8-bit image data encoded in base64 format) for current media in the Color Page. Example is provided in 6_get_current_media_thumbnail.py in Example folder.
+|`GetTrackName(trackType, trackIndex)`                  |`string`          | Returns name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 <= trackIndex <= GetTrackCount(trackType).
+|`SetTrackName(trackType, trackIndex, name)`            |`Bool`            | Sets name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 <= trackIndex <= GetTrackCount(trackType).
+|===
+
+
 
 == Using a script
 
