@@ -9,10 +9,10 @@
 
 [options="header"]
 |===
-| Method | Return Type | Comment
-| `Fusion()`   | `Fusion` | Returns the Fusion object. Starting point for Fusion scripts.
-| `GetMediaStorage()`| `MediaStorage` | Returns media storage object to query and act on media locations.
-| `GetProjectManager()` `ProjectManager` | Returns project manager object for currently open database.
+| Method               | Return Type | Comment
+| `Fusion()`           | `Fusion` | Returns the Fusion object. Starting point for Fusion scripts.
+| `GetMediaStorage()`  | `MediaStorage` | Returns media storage object to query and act on media locations.
+| `GetProjectManager()`| `ProjectManager` | Returns project manager object for currently open database.
 | `OpenPage(pageName)` | `None` |  Switches to indicated page in DaVinci Resolve. Input can be one of ("media", "cut", "edit", "fusion", "color", "fairlight", "deliver").
 |===
 
@@ -21,10 +21,10 @@
 
 [options="header"]
 |===
-| Method | Return Type | Comment
-|`CreateProject(projectName)`          |`Project`           | Creates and returns a project if projectName (text) is unique, and None if it is not.
-|`DeleteProject(projectName)`          |`Bool`              | Delete project in the current folder if not currently loaded.
-|`LoadProject(projectName)`            |`Project`           | Loads and returns the project with name = projectName (text) if there is a match found, and None if there is no matching Project.
+| Method                                  | Return Type        | Comment
+|`CreateProject(projectName)`             |`Project`           | Creates and returns a project if projectName (text) is unique, and None if it is not.
+|`DeleteProject(projectName)`             |`Bool`              | Delete project in the current folder if not currently loaded.
+|`LoadProject(projectName)`               |`Project`           | Loads and returns the project with name = projectName (text) if there is a match found, and None if there is no matching Project.
 |`GetCurrentProject()`                   |`Project`            | Returns the currently loaded Resolve project.
 |`SaveProject()`                         |`Bool`               | Saves the currently loaded project with its own name. Returns True if successful.
 |`CloseProject(project)`                 |`Bool`               | Closes the specified project without saving.
@@ -38,6 +38,43 @@
 |`ExportProject(projectName, filePath)`  |`Bool`               | Exports a project based on given name into provided file path. Returns true in case of success.
 |`RestoreProject(filePath)`              |`Bool`               | Restores a project under given backup file path. Returns true in case of success.
 |===
+
+== Project
+
+[options="header"]
+|===
+| Method                                               | Return Type        | Comment
+|`GetMediaPool()`                                      |`MediaPool`         | Returns the Media Pool object.
+|`GetTimelineCount()`                                  |`int`               | Returns the number of timelines currently present in the project.
+|`GetTimelineByIndex(idx)`                             |`Timeline`          | Returns timeline at the given index, 1 <= idx <= project.GetTimelineCount()
+|`GetCurrentTimeline()`                                |`Timeline`          | Returns the currently loaded timeline.
+|`SetCurrentTimeline(timeline)`                        |`Bool`              | Sets given timeline as current timeline for the project. Returns True if successful.
+|`GetName()`                                           |`string`            | Returns project name.
+|`SetName(projectName)`                                |`Bool`              | Sets project name if given projectname (text) is unique.
+|`GetPresetList()`                                     |`[presets...]`      | Returns a list of presets and their information.
+|`SetPreset(presetName)`                               |`Bool`              | Sets preset by given presetName (string) into project.
+|`GetRenderJobList()`                                  |`[render jobs...]`  | Returns a list of render jobs and their information.
+|`GetRenderPresetList()`                               |`[presets...]`      | Returns a list of render presets and their information.
+|`StartRendering(index1, index2, ...)`                 |`Bool`              | Starts rendering for given render jobs based on their indices.
+|`StartRendering([idxs...], isInteractiveMode = False)`|`Bool`              | Starts rendering for given render jobs based on their indices. Optional field `isInteractiveMode`. It is Bool Type and it defaults to False. `isInteractiveMode` indicates whether there should be display of error dialog during rendering.
+|`StartRendering(isInteractiveMode = False)`           |`Bool`              | Starts rendering for all render jobs. Optional field `isInteractiveMode`. It is Bool Type and it defaults to False. `isInteractiveMode` indicates whether there should be display of error dialog during rendering.
+|`StopRendering()`                                     | `None`             | Stops rendering for all render jobs.
+|`IsRenderingInProgress()`                             | `Bool`             | Returns true is rendering is in progress.
+|`AddRenderJob()`                                      | `Bool`             | Adds render job to render queue.
+|`DeleteRenderJobByIndex(idx)`                         | `Bool`             | Deletes render job based on given job index (int).
+|`DeleteAllRenderJobs()`                               | `Bool`             | Deletes all render jobs.
+|`LoadRenderPreset(presetName)`                        | `Bool`             | Sets a preset as current preset for rendering if presetName (text) exists.
+|`SaveAsNewRenderPreset(presetName)`                   | `Bool`             | Creates a new render preset by given name if presetName(text) is unique.
+|`SetRenderSettings({settings})`                       | `Bool`             | Sets given settings for rendering. Settings is a dict, with support for the keys: `"SelectAllFrames", "MarkIn", "MarkOut", "TargetDir", "CustomName"`.
+|`GetRenderJobStatus(idx)`                             | `{status info}`      | Returns a dict with job status and completion percentage of the job by given job index (int).
+|`GetSetting(settingName)`                             | `string`             | Returns value of project setting (indicated by settingName, string). Check the section below for more information.
+|`SetSetting(settingName, settingValue)`               | `Bool`               | Sets a project setting (indicated by settingName, string) to the value (settingValue, string). Check the section below for more information.
+|`GetRenderFormats()`                                  | `{render formats..}` | Returns a dict (format -> file extension) of available render formats.
+|`GetRenderCodecs(renderFormat)`                       | `{render codecs...}` | Returns a dict (codec description -> codec name) of available codecs for given render format (string).
+|`GetCurrentRenderFormatAndCodec()`                    | `{format, codec}`    | Returns a dict with currently selected format 'format' and render codec 'codec'.
+|`SetCurrentRenderFormatAndCodec(format, codec)`       | `Bool`               | Sets given render format (string) and render codec (string) as options for rendering.
+
+
 
 == About This Document
 This document is a formatted copy of the official BlackmagicDesign DaVinci Resolve scripting documentation. +
