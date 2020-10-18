@@ -1,0 +1,1066 @@
+<div id="toc" class="toc">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#about-this-document">About This Document</a></li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#basic-resolve-api">Basic Resolve API</a>
+<ul class="sectlevel2">
+<li><a href="#resolve">Resolve</a></li>
+<li><a href="#projectmanager">ProjectManager</a></li>
+<li><a href="#project">Project</a></li>
+<li><a href="#mediastorage">MediaStorage</a></li>
+<li><a href="#mediapool">MediaPool</a></li>
+<li><a href="#folder">Folder</a></li>
+<li><a href="#mediapoolitem">MediaPoolItem</a></li>
+<li><a href="#timeline">Timeline</a></li>
+<li><a href="#timelineitem">TimelineItem</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="sect1">
+<h2 id="about-this-document">About This Document</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>This document is a formatted copy of the official BlackmagicDesign DaVinci Resolve scripting documentation.<br></p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Keep in mind that this document might contain errors and might not be up to date with the current Resolve version.<br>
+If in doubt, always consult the official Resolve documentation provided by BlackmagicDesign.
+</td>
+</tr>
+</table>
+</div>
+<div style="page-break-after: always;"></div>
+<div class="paragraph">
+<p>In this package, you will find a brief introduction to the Scripting API for DaVinci Resolve Studio. Apart from this README.txt file, this package contains folders containing the basic import
+modules for scripting access (DaVinciResolve.py) and some representative examples.</p>
+</div>
+<div class="paragraph">
+<p>From v16.2.0 onwards, the nodeIndex parameters accepted by SetLUT() and SetCDL() are 1-based instead of 0-based, i.e. 1 &#8656; nodeIndex &#8656; total number of nodes.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="overview">Overview</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>As with Blackmagic Design Fusion scripts, user scripts written in Lua and Python programming languages are supported. By default, scripts can be invoked from the Console window in the Fusion page,
+or via command line. This permission can be changed in Resolve Preferences, to be only from Console, or to be invoked from the local network. Please be aware of the security implications when
+allowing scripting access from outside of the Resolve application.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="basic-resolve-api">Basic Resolve API</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="resolve">Resolve</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Fusion()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Fusion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the Fusion object. Starting point for Fusion scripts.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMediaStorage()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MediaStorage</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns media storage object to query and act on media locations.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetProjectManager()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ProjectManager</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns project manager object for currently open database.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OpenPage(pageName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>None</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Switches to indicated page in DaVinci Resolve. Input can be one of (<code>"media", "cut", "edit", "fusion", "color", "fairlight", "deliver"</code>).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="projectmanager">ProjectManager</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CreateProject(projectName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates and returns a project if projectName (text) is unique, and None if it is not.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteProject(projectName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete project in the current folder if not currently loaded.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LoadProject(projectName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loads and returns the project with name = projectName (text) if there is a match found, and None if there is no matching Project.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetCurrentProject()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Project</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the currently loaded Resolve project.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SaveProject()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Saves the currently loaded project with its own name. Returns True if successful.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CloseProject(project)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Closes the specified project without saving.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CreateFolder(folderName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a folder if folderName (text) is unique.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetProjectListInCurrentFolder()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[project names&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of project names in current folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFolderListInCurrentFolder()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[folder names&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of folder names in current folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GotoRootFolder()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Opens root folder in database.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GotoParentFolder()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Opens parent folder of current folder in database if current folder has parent.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>OpenFolder(folderName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Opens folder under given name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ImportProject(filePath)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Imports a project under given file path. Returns true in case of success.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExportProject(projectName, filePath)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exports a project based on given name into provided file path. Returns true in case of success.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RestoreProject(filePath)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Restores a project under given backup file path. Returns true in case of success.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="project">Project</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMediaPool()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MediaPool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the Media Pool object.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetTimelineCount()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the number of timelines currently present in the project.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetTimelineByIndex(idx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns timeline at the given index, 1 &#8656; idx &#8656; project.GetTimelineCount()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetCurrentTimeline()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the currently loaded timeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetCurrentTimeline(timeline)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets given timeline as current timeline for the project. Returns True if successful.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetName()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns project name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetName(projectName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets project name if given projectname (text) is unique.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetPresetList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[presets&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of presets and their information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetPreset(presetName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets preset by given presetName (string) into project.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetRenderJobList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[render jobs&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of render jobs and their information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetRenderPresetList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[presets&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of render presets and their information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StartRendering(index1, index2, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Starts rendering for given render jobs based on their indices.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StartRendering([idxs&#8230;&#8203;], isInteractiveMode = False)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Starts rendering for given render jobs based on their indices. Optional field <code>isInteractiveMode</code>. It is Bool Type and it defaults to False. <code>isInteractiveMode</code> indicates whether there should be display of error dialog during rendering.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StartRendering(isInteractiveMode = False)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Starts rendering for all render jobs. Optional field <code>isInteractiveMode</code>. It is Bool Type and it defaults to False. <code>isInteractiveMode</code> indicates whether there should be display of error dialog during rendering.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>StopRendering()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>None</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Stops rendering for all render jobs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IsRenderingInProgress()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns true is rendering is in progress.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddRenderJob()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds render job to render queue.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteRenderJobByIndex(idx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deletes render job based on given job index (int).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteAllRenderJobs()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deletes all render jobs.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LoadRenderPreset(presetName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets a preset as current preset for rendering if presetName (text) exists.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SaveAsNewRenderPreset(presetName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a new render preset by given name if presetName(text) is unique.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetRenderSettings({settings})</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets given settings for rendering. Settings is a dict, with support for the keys: <code>"SelectAllFrames", "MarkIn", "MarkOut", "TargetDir", "CustomName"</code>.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetRenderJobStatus(idx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{status info}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict with job status and completion percentage of the job by given job index (int).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetSetting(settingName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns value of project setting (indicated by settingName, string). Check the section below for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetSetting(settingName, settingValue)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets a project setting (indicated by settingName, string) to the value (settingValue, string). Check the section below for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetRenderFormats()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{render formats..}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (format &#8594; file extension) of available render formats.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetRenderCodecs(renderFormat)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{render codecs&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (codec description &#8594; codec name) of available codecs for given render format (string).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetCurrentRenderFormatAndCodec()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{format, codec}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict with currently selected format 'format' and render codec 'codec'.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetCurrentRenderFormatAndCodec(format, codec)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets given render format (string) and render codec (string) as options for rendering.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="mediastorage">MediaStorage</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMountedVolumeList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[paths&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetSubFolderList(folderPath)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[paths&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of folder paths in the given absolute folder path.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFileList(folderPath)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[paths&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RevealInStorage(path)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>None</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Expands and displays a given file/folder path in Resolve’s Media Storage.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddItemListToMediaPool(item1, item2, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[clips&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a list of the MediaPoolItems created.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddItemListToMediaPool([items&#8230;&#8203;])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[clips&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a list of the MediaPoolItems created.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="mediapool">MediaPool</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetRootFolder()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Folder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the root Folder of Media Pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddSubFolder(folder, name)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Folder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a new subfolder under specified Folder object with the given name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CreateEmptyTimeline(name)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a new timeline with given name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AppendToTimeline(clip1, clip2, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Appends specified MediaPoolItem objects in the current timeline. Returns True if successful.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AppendToTimeline([clips])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Appends specified MediaPoolItem objects in the current timeline. Returns True if successful.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AppendToTimeline([{clipInfo}, &#8230;&#8203;])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Appends list of clipInfos specified as a dict of "mediaPoolItem", "startFrame" (int), "endFrame" (int).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CreateTimelineFromClips(name, clip1, clip2,&#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a new timeline with specified name, and appends the specified MediaPoolItem objects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CreateTimelineFromClips(name, [clips])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a new timeline with specified name, and appends the specified MediaPoolItem objects.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CreateTimelineFromClips(name, [{clipInfo}])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a new timeline with specified name, appending the list of clipInfos specified as a dict of "mediaPoolItem", "startFrame" (int), "endFrame" (int).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ImportTimelineFromFile(filePath)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Timeline</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates timeline based on parameters within given file.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetCurrentFolder()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Folder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns currently selected Folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetCurrentFolder(Folder)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets current folder by given Folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteClips([clips])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deletes the specified clips in the media pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteFolders([subfolders])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deletes the specified subfolders in the media pool</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MoveClips([clips], targetFolder)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Moves specified clips to target folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MoveFolders([folders], targetFolder)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Moves specified folders to target folder.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="folder">Folder</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetClipList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[clips&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of clips (items) within the folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetName()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns user-defined name of the folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetSubFolderList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[folders&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of subfolders in the folder.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="mediapoolitem">MediaPoolItem</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMetadata(metadataType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{metadata}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (metadata type &#8594; metadata value). If parameter is not specified returns all set metadata parameters.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetMetadata(metadataType, metadataValue)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets metadata by given type and value. Returns True if successful.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMediaId()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a unique ID name related to MediaPoolItem.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddMarker(frameId, color, name, note, duration)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a new marker at given frameId position and with given marker information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMarkers()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{markers&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (frameId &#8594; {information}) of all markers and dicts with their information. Example of output format: <code>{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, &#8230;&#8203;}</code> In the above example - there is one <code>Green</code> marker at offset 96 (position of the marker)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteMarkersByColor(color)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete all markers of the specified color from the media pool item. "All" as argument deletes all color markers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteMarkerAtFrame(frameNum)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete marker at frame number from the media pool item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddFlag(color)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a flag with given color (text).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFlagList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[colors&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of flag colors assigned to the item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClearFlags(color)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clears the flag of specified color from an item. If "All" argument is provided, all flags will be cleared.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetClipColor()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns an item color as a string.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetClipColor(colorName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets color of an item based on the colorName (string).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClearClipColor()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clears clip color of an item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetClipProperty(propertyName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{clipProperties}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (property name &#8594; property value) of an item. If no argument is provided, all clip properties will be returned. Check the section below for more information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetClipProperty(propertyName, propertyValue)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets into given propertyName (string) propertyValue (string). Check the section below for more information.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="timeline">Timeline</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetName()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns user-defined name of the timeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetName(timelineName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets timeline name is timelineName (text) is unique.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetStartFrame()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns frame number at the start of timeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetEndFrame()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns frame number at the end of timeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetTrackCount(trackType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a number of track based on specified track type ("audio", "video" or "subtitle").</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetItemListInTrack(trackType, index)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[items&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of Timeline items on the video or audio track (based on trackType) at specified index. 1 &#8656; index &#8656; GetTrackCount(trackType).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddMarker(frameId, color, name, note, duration)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a new marker at given frameId position and with given marker information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMarkers()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{markers&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (frameId &#8594; {information}) of all markers and dicts with their information. Example of output format: <code>{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, &#8230;&#8203;}</code> In the above example - there is one 'Green' marker at offset 96 (position of the marker)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteMarkersByColor(color)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete all markers of the specified color from the timeline. "All" as argument deletes all color markers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteMarkerAtFrame(frameNum)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete marker at frame number from the timeline.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ApplyGradeFromDRX(path, gradeMode, item1, item2, &#8230;&#8203;)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loads a still from given file path (string) and applies grade to Timeline Items with gradeMode (int): 0 - "No keyframes", 1 - "Source Timecode aligned", 2 - "Start Frames aligned".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ApplyGradeFromDRX(path, gradeMode, [items])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loads a still from given file path (string) and applies grade to Timeline Items with gradeMode (int): 0 - "No keyframes", 1 - "Source Timecode aligned", 2 - "Start Frames aligned".</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetCurrentTimecode()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a string representing a timecode for current position of the timeline, while on Cut, Edit, Color and Deliver page.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetCurrentVideoItem()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>item</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns current video timeline item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetCurrentClipThumbnailImage()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{thumbnailData}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (keys "width", "height", "format" and "data") with data containing raw thumbnail image data (RGB 8-bit image data encoded in base64 format) for current media in the Color Page. Example is provided in 6_get_current_media_thumbnail.py in Example folder.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetTrackName(trackType, trackIndex)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 &#8656; trackIndex &#8656; GetTrackCount(trackType).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetTrackName(trackType, trackIndex, name)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 &#8656; trackIndex &#8656; GetTrackCount(trackType).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="timelineitem">TimelineItem</h3>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Method</th>
+<th class="tableblock halign-left valign-top">Return Type</th>
+<th class="tableblock halign-left valign-top">Comment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetName()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a name of the item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetDuration()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a duration of item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetEnd()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a position of end frame.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFusionCompCount()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the number of Fusion compositions associated with the timeline item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFusionCompByIndex(compIndex)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fusionComp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns Fusion composition object based on given index. 1 &#8656; compIndex &#8656; timelineItem.GetFusionCompCount()</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFusionCompNameList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[names&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of Fusion composition names associated with the timeline item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFusionCompByName(compName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fusionComp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns Fusion composition object based on given name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetLeftOffset()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a maximum extension by frame for clip from left side.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetRightOffset()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a maximum extension by frame for clip from right side.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetStart()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a position of first frame.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddMarker(frameId, color, name, note, duration)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Creates a new marker at given frameId position and with given marker information.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMarkers()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{markers&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (frameId &#8594; {information}) of all markers and dicts with their information. Example of output format: <code>{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, &#8230;&#8203;}</code>. In the above example - there is one 'Green' marker at offset 96 (position of the marker)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteMarkersByColor(color)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete all markers of the specified color from the timeline item. "All" as argument deletes all color markers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteMarkerAtFrame(frameNum)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Delete marker at frame number from the timeline item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddFlag(color)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a flag with given color (text).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetFlagList()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[colors&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of flag colors assigned to the item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClearFlags(color)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clears the flag of specified color from an item. If "All" argument is provided, all flags will be cleared.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetClipColor()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>string</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns an item color as a string.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetClipColor(colorName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets color of an item based on the colorName (string).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ClearClipColor()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Clears clip color of an item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddFusionComp()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fusionComp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a new Fusion composition associated with the timeline item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ImportFusionComp(path)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fusionComp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Imports Fusion composition from given file path by creating and adding a new composition for the item.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExportFusionComp(path, compIndex)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Exports Fusion composition based on given index into provided file name path.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteFusionCompByName(compName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deletes Fusion composition by provided name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LoadFusionCompByName(compName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>fusionComp</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loads Fusion composition by provided name and sets it as active composition.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RenameFusionCompByName(oldName, newName)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renames Fusion composition by provided name with new given name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddVersion(versionName, versionType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a new Version associated with the timeline item. versionType: 0 - local, 1 - remote.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteVersionByName(versionName, versionType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deletes Version by provided name. versionType: 0 - local, 1 - remote.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LoadVersionByName(versionName, versionType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Loads Version by provided name and sets it as active Version. versionType: 0 - local, 1 - remote.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>RenameVersionByName(oldName, newName, versionType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Renames Version by provided name with new given name. versionType: 0 - local, 1 - remote.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetMediaPoolItem()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MediaPoolItem</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a corresponding to the timeline item media pool item if it exists.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetVersionNameList(versionType)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[names&#8230;&#8203;]</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a list of version names by provided versionType: 0 - local, 1 - remote.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetStereoConvergenceValues()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{keyframes&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (offset &#8594; value) of keyframe offsets and respective convergence values.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetStereoLeftFloatingWindowParams()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{keyframes&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For the LEFT eye &#8594; returns a dict (offset &#8594; dict) of keyframe offsets and respective floating window params. Value at particular o
+ffset includes the left, right, top and bottom floating window values.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetStereoRightFloatingWindowParams()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{keyframes&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For the RIGHT eye &#8594; returns a dict (offset &#8594; dict) of keyframe offsets and respective floating window params. Value at particular
+offset includes the left, right, top and bottom floating window values.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetLUT(nodeIndex, lutPath)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Sets LUT on the node mapping the node index provided, 1 &#8656; nodeIndex &#8656; total number of nodes. The lutPath can be a relative path or absolute path. The operation will be successful for valid lut paths that Resolve has already discovered.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SetCDL([CDL map])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Keys of map are: "NodeIndex", "Slope", "Offset", "Power", "Saturation", where 1 &#8656; NodeIndex &#8656; total number of nodes. Example python code - <code>SetCDL({"NodeIndex" : "1", "Slope" : "0.5 0.4 0.2", "Offset" : "0.4 0.3 0.2", "Power" : "0.6 0.7 0.8", "Saturation" : "0.65"})</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AddTake(mediaPoolItem, startFrame, endFrame)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Adds a new take to take selector. It will initialise this timeline item as take selector if it&#8217;s not already one. Arguments startFrame and endFrame are optional, and if not specified the entire clip will be added.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetSelectedTakeIndex()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the index of currently selected take, or 0 if the clip is not a take selector.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetTakesCount()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns the number of takes in take selector, or 0 if the clip is not a take selector.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>GetTakeByIndex(idx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{takeInfo&#8230;&#8203;}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns a dict (keys "startFrame", "endFrame" and "mediaPoolItem") with take info for specified index.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DeleteTakeByIndex(idx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deletes a take by index, 1 &#8656; idx &#8656; number of takes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SelectTakeByIndex(idx)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Selects a take by index, 1 &#8656; idx &#8656; number of takes.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FinalizeTake()</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Finalizes take selection.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>CopyGrades([tgtTimelineItems])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Bool</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Copies grade to all the items in tgtTimelineItems list. Returns true on success and false if any error occured.</p>
+<p class="tableblock">== Using a script</p>
+<p class="tableblock">DaVinci Resolve needs to be running for a script to be invoked.</p>
+<p class="tableblock">For a Resolve script to be executed from an external folder, the script needs to know of the API location.
+You may need to set the these environment variables to allow for your Python installation to pick up the appropriate dependencies as shown below:</p>
+<p class="tableblock">Mac OS X:
+----
+RESOLVE_SCRIPT_API="/Library/Application Support/Blackmagic Design/DaVinci Resolve/Developer/Scripting/"
+RESOLVE_SCRIPT_LIB="/Applications/DaVinci Resolve/DaVinci Resolve.app/Contents/Libraries/Fusion/fusionscript.so"
+PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
+----</p>
+<p class="tableblock">Windows:
+----
+RESOLVE_SCRIPT_API="%PROGRAMDATA%\Blackmagic Design\DaVinci Resolve\Support\Developer\Scripting\"
+RESOLVE_SCRIPT_LIB="C:\Program Files\Blackmagic Design\DaVinci Resolve\fusionscript.dll"
+PYTHONPATH="%PYTHONPATH%;%RESOLVE_SCRIPT_API%\Modules\"
+----</p>
+<p class="tableblock">Linux:
+----
+RESOLVE_SCRIPT_API="/opt/resolve/Developer/Scripting/"
+RESOLVE_SCRIPT_LIB="/opt/resolve/libs/Fusion/fusionscript.so"
+PYTHONPATH="$PYTHONPATH:$RESOLVE_SCRIPT_API/Modules/"
+(Note: For standard ISO Linux installations, the path above may need to be modified to refer to /home/resolve instead of /opt/resolve)
+----</p>
+<p class="tableblock">As with Fusion scripts, Resolve scripts can also be invoked via the menu and the Console.</p>
+<p class="tableblock">On startup, DaVinci Resolve scans the Utility Scripts directory and enumerates the scripts found in the Script application menu. Placing your script in this folder and invoking it from this menu is
+the easiest way to use scripts. The Utility Scripts folder is located in:
+----
+Mac OS X:   /Library/Application Support/Blackmagic Design/DaVinci Resolve/Fusion/Scripts/Comp/
+Windows:    %APPDATA%\Blackmagic Design\DaVinci Resolve\Fusion\Scripts\Comp\
+Linux:      /opt/resolve/Fusion/Scripts/Comp/   (or /home/resolve/Fusion/Scripts/Comp/ depending on installation)
+----</p>
+<p class="tableblock">The interactive Console window allows for an easy way to execute simple scripting commands, to query or modify properties, and to test scripts. The console accepts commands in Python 2.7, Python 3.6
+and Lua and evaluates and executes them immediately. For more information on how to use the Console, please refer to the DaVinci Resolve User Manual.</p>
+<p class="tableblock">.This example Python script creates a simple project:
+[source, Python]
+----
+#!/usr/bin/env python
+import DaVinciResolveScript as dvr_script
+resolve = dvr_script.scriptapp("Resolve")
+fusion = resolve.Fusion()
+projectManager = resolve.GetProjectManager()
+projectManager.CreateProject("Hello World")
+----</p>
+<p class="tableblock">The resolve object is the fundamental starting point for scripting via Resolve. As a native object, it can be inspected for further scriptable properties - using table iteration and "getmetatable"
+in Lua and dir, help etc in Python (among other methods). A notable scriptable object above is fusion - it allows access to all existing Fusion scripting functionality.</p>
+<p class="tableblock">== Running DaVinci Resolve in headless mode</p>
+<p class="tableblock">DaVinci Resolve can be launched in a headless mode without the user interface using the -nogui command line option. When DaVinci Resolve is launched using this option, the user interface is disabled.
+However, the various scripting APIs will continue to work as expected.</p>
+<p class="tableblock">== List and Dict Data Structures
+Beside primitive data types, Resolve&#8217;s Python API mainly uses list and dict data structures. Lists are denoted by [ &#8230;&#8203; ] and dicts are denoted by { &#8230;&#8203; } above.
+As Lua does not support list and dict data structures, the Lua API implements "list" as a table with indices, e.g. { [1] = listValue1, [2] = listValue2, &#8230;&#8203; }.
+Similarly the Lua API implements "dict" as a table with the dictionary key as first element, e.g. { [dictKey1] = dictValue1, [dictKey2] = dictValue2, &#8230;&#8203; }.</p>
+<p class="tableblock">== Looking up Project and Clip properties</p>
+<p class="tableblock">This section covers additional notes for the functions "Project:GetSetting", "Project:SetSetting", "MediaPoolItem:GetClipProperty" and "MediaPoolItem:SetClipProperty". These functions are used to get
+and set properties otherwise available to the user through the Project Settings and the Clip Attributes dialogs.</p>
+<p class="tableblock">The functions follow a key-value pair format, where each property is identified by a key (the settingName or propertyName parameter) and possesses a value (typically a text value). Keys and values are
+designed to be easily correlated with parameter names and values in the Resolve UI. Explicitly enumerated values for some parameters are listed below.</p>
+<p class="tableblock">Some properties may be read only - these include intrinsic clip properties like date created or sample rate, and properties that can be disabled in specific application contexts (e.g. custom colorspaces
+in an ACES workflow, or output sizing parameters when behavior is set to match timeline)</p>
+<p class="tableblock">=== Getting Values
+Invoke <code>Project:GetSetting</code> or "MediaPoolItem:GetClipProperty" with the appropriate property key. To get a snapshot of all queryable properties (keys and values), you can call "Project:GetSetting" or
+"MediaPoolItem:GetClipProperty" without parameters (or with a NoneType or a blank property key). Using specific keys to query individual properties will be faster. Note that getting a property using an
+invalid key will return a trivial result.</p>
+<p class="tableblock">=== Setting Values
+Invoke "Project:SetSetting" or "MediaPoolItem:SetClipProperty" with the appropriate property key and a valid value. When setting a parameter, please check the return value to ensure the success of the
+operation. You can troubleshoot the validity of keys and values by setting the desired result from the UI and checking property snapshots before and after the change.</p>
+<p class="tableblock">.The following Project properties have specifically enumerated values:
+superScale::
+The property value is an enumerated integer between 0 and 3 with these meanings: 0=Auto, 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x.<br>
+Affects:
+* x = Project:GetSetting('superScale') and Project:SetSetting('superScale', x)</p>
+<p class="tableblock">timelineFrameRate::
+The property value is one of the frame rates available to the user in project settings under "Timeline frame rate" option. Drop Frame can be configured for supported frame rates by appending the frame rate with "DF", e.g. "29.97 DF" will enable drop frame and "29.97" will disable drop frame<br>
+Affects:
+* x = Project:GetSetting('timelineFrameRate') and Project:SetSetting('timelineFrameRate', x)</p>
+<p class="tableblock">.The following Clip properties have specifically enumerated values:
+superScale:: The property value is an enumerated integer between 1 and 3 with these meanings: 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x.
+Affects:
+* x = MediaPoolItem:GetClipProperty('Super Scale') and MediaPoolItem:SetClipProperty('Super Scale', x)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>

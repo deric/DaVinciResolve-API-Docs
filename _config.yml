@@ -25,7 +25,8 @@ encoding: UTF-8
 
 # Build settings
 #markdown: kramdown
-source: docs
+source: src
+destination: docs
 #theme: slate
 plugins:
   - jekyll-feed
