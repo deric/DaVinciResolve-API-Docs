@@ -148,6 +148,28 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
+=== MediaPoolItem
+[options="header"]
+|===
+| Method                                           | Return Type      | Comment
+|`GetMetadata(metadataType)`                       |`{metadata}`      | Returns a dict (metadata type -> metadata value). If parameter is not specified returns all set metadata parameters.
+|`SetMetadata(metadataType, metadataValue)`        |`Bool`            | Sets metadata by given type and value. Returns True if successful.
+|`GetMediaId()`                                    |`string`          | Returns a unique ID name related to MediaPoolItem.
+|`AddMarker(frameId, color, name, note, duration)` |`Bool`            | Creates a new marker at given frameId position and with given marker information.
+|`GetMarkers()`                                    |`{markers...}`    | Returns a dict (frameId -> {information}) of all markers and dicts with their information. Example of output format: `{96.0: {'color': 'Green', 'duration': 1.0, 'note': '', 'name': 'Marker 1'}, ...}` In the above example - there is one `Green` marker at offset 96 (position of the marker)
+|`DeleteMarkersByColor(color)`                      |`Bool`             | Delete all markers of the specified color from the media pool item. "All" as argument deletes all color markers.
+|`DeleteMarkerAtFrame(frameNum)`                    |`Bool`             | Delete marker at frame number from the media pool item.
+|`AddFlag(color)`                                   |`Bool`             | Adds a flag with given color (text).
+|`GetFlagList()`                                    |`[colors...]`      | Returns a list of flag colors assigned to the item.
+|`ClearFlags(color)`                                |`Bool`             | Clears the flag of specified color from an item. If "All" argument is provided, all flags will be cleared.
+|`GetClipColor()`                                   |`string`           | Returns an item color as a string.
+|`SetClipColor(colorName)`                          |`Bool`             | Sets color of an item based on the colorName (string).
+|`ClearClipColor()`                                 |`Bool`             | Clears clip color of an item.
+|`GetClipProperty(propertyName)`                    |`{clipProperties}` | Returns a dict (property name -> property value) of an item. If no argument is provided, all clip properties will be returned. Check the section below for more information.
+|`SetClipProperty(propertyName, propertyValue)`     |`Bool`             | Sets into given propertyName (string) propertyValue (string). Check the section below for more information.
+|===
+
+
 
 == Using a script
 
