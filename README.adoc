@@ -63,7 +63,7 @@ allowing scripting access from outside of the Resolve application.
 |`RestoreProject(filePath)`              |`Bool`               | Restores a project under given backup file path. Returns true in case of success.
 |===
 
-== Project
+=== Project
 
 [options="header"]
 |===
@@ -106,12 +106,12 @@ allowing scripting access from outside of the Resolve application.
 [options="header"]
 |===
 | Method                                    | Return Type   | Comment
-|`GetMountedVolumeList()                    | `[paths...]`  | Returns a list of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.
-|`GetSubFolderList(folderPath)              | `[paths...]`  | Returns a list of folder paths in the given absolute folder path.
-|`GetFileList(folderPath)                   | `[paths...]`  | Returns a list of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.
-|`RevealInStorage(path)                     | `None`        | Expands and displays a given file/folder path in Resolve’s Media Storage.
-|`AddItemListToMediaPool(item1, item2, ...) | `[clips...]`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a list of the MediaPoolItems created.
-|`AddItemListToMediaPool([items...])        | `[clips...]`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a list of the MediaPoolItems created.
+|`GetMountedVolumeList()`                    | `[paths...]`  | Returns a list of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.
+|`GetSubFolderList(folderPath)`              | `[paths...]`  | Returns a list of folder paths in the given absolute folder path.
+|`GetFileList(folderPath)`                   | `[paths...]`  | Returns a list of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.
+|`RevealInStorage(path)`                     | `None`        | Expands and displays a given file/folder path in Resolve’s Media Storage.
+|`AddItemListToMediaPool(item1, item2, ...)` | `[clips...]`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a list of the MediaPoolItems created.
+|`AddItemListToMediaPool([items...])`        | `[clips...]`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a list of the MediaPoolItems created.
 |===
 
 
