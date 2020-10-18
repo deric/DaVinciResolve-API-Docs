@@ -9,11 +9,11 @@
 
 [options="header"]
 |===
-| Method               | Return Type | Comment
-| `Fusion()`           | `Fusion` | Returns the Fusion object. Starting point for Fusion scripts.
-| `GetMediaStorage()`  | `MediaStorage` | Returns media storage object to query and act on media locations.
+| Method               | Return Type      | Comment
+| `Fusion()`           | `Fusion`         | Returns the Fusion object. Starting point for Fusion scripts.
+| `GetMediaStorage()`  | `MediaStorage`   | Returns media storage object to query and act on media locations.
 | `GetProjectManager()`| `ProjectManager` | Returns project manager object for currently open database.
-| `OpenPage(pageName)` | `None` |  Switches to indicated page in DaVinci Resolve. Input can be one of ("media", "cut", "edit", "fusion", "color", "fairlight", "deliver").
+| `OpenPage(pageName)` | `None`           |  Switches to indicated page in DaVinci Resolve. Input can be one of (`"media", "cut", "edit", "fusion", "color", "fairlight", "deliver"`).
 |===
 
 
@@ -73,7 +73,7 @@
 |`GetRenderCodecs(renderFormat)`                       | `{render codecs...}` | Returns a dict (codec description -> codec name) of available codecs for given render format (string).
 |`GetCurrentRenderFormatAndCodec()`                    | `{format, codec}`    | Returns a dict with currently selected format 'format' and render codec 'codec'.
 |`SetCurrentRenderFormatAndCodec(format, codec)`       | `Bool`               | Sets given render format (string) and render codec (string) as options for rendering.
-
+|===
 
 
 == About This Document
