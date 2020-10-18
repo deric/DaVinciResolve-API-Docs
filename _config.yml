@@ -26,7 +26,7 @@ encoding: UTF-8
 # Build settings
 markdown: kramdown
 source: docs
-#theme: slate
+theme: jekyll-theme-slate
 plugins:
 # - jekyll-feed
 
@@ -41,5 +41,3 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-
-theme: jekyll-theme-slate
