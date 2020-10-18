@@ -1,3 +1,10 @@
+---
+layout: home
+permalink: /
+title: Unofficial DaVinci Resolve Scripting Documentation
+---
+
+
 = Unofficial DaVinci Resolve Scripting Documentation
 :icons: font
 :toc:
