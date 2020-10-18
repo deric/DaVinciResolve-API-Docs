@@ -2,16 +2,17 @@
 :icons: font
 :toc:
 
-<<<
 
-Version: 1.01 +
-DaVinci Resolve version: 16.2.1 +
+== Basic Resolve API
 
-Official Resolve documentation updated as of 23 January 2020 +
-Unofficial documentation updated as of 01 May 2020 +
+=== Resolve
+|===
+| `Fusion()`   | `Fusion` | Returns the Fusion object. Starting point for Fusion scripts.
+| `GetMediaStorage()`| `MediaStorage` | Returns media storage object to query and act on media locations.
+| `GetProjectManager()` `ProjectManager` | Returns project manager object for currently open database.
+| `OpenPage(pageName)` | `None` |  Switches to indicated page in DaVinci Resolve. Input can be one of ("media", "cut", "edit", "fusion", "color", "fairlight", "deliver").
+|===
 
-
-<<<
 
 == About This Document
 This document is a formatted copy of the official BlackmagicDesign DaVinci Resolve scripting documentation. +
@@ -41,7 +42,7 @@ allowing scripting access from outside of the Resolve application.
 
 DaVinci Resolve needs to be running for a script to be invoked.
 
-For a Resolve script to be executed from an external folder, the script needs to know of the API location. 
+For a Resolve script to be executed from an external folder, the script needs to know of the API location.
 You may need to set the these environment variables to allow for your Python installation to pick up the appropriate dependencies as shown below:
 
 Mac OS X:
@@ -101,11 +102,6 @@ However, the various scripting APIs will continue to work as expected.
 
 
 
-<<<
-
-include::Formatted Resolve API Functions.adoc[]
-
-
 == List and Dict Data Structures
 Beside primitive data types, Resolve's Python API mainly uses list and dict data structures. Lists are denoted by [ ... ] and dicts are denoted by { ... } above.
 As Lua does not support list and dict data structures, the Lua API implements "list" as a table with indices, e.g. { [1] = listValue1, [2] = listValue2, ... }.
@@ -124,7 +120,7 @@ Some properties may be read only - these include intrinsic clip properties like 
 in an ACES workflow, or output sizing parameters when behavior is set to match timeline)
 
 === Getting Values
-Invoke "Project:GetSetting" or "MediaPoolItem:GetClipProperty" with the appropriate property key. To get a snapshot of all queryable properties (keys and values), you can call "Project:GetSetting" or
+Invoke `Project:GetSetting` or "MediaPoolItem:GetClipProperty" with the appropriate property key. To get a snapshot of all queryable properties (keys and values), you can call "Project:GetSetting" or
 "MediaPoolItem:GetClipProperty" without parameters (or with a NoneType or a blank property key). Using specific keys to query individual properties will be faster. Note that getting a property using an
 invalid key will return a trivial result.
 
@@ -133,12 +129,12 @@ Invoke "Project:SetSetting" or "MediaPoolItem:SetClipProperty" with the appropri
 operation. You can troubleshoot the validity of keys and values by setting the desired result from the UI and checking property snapshots before and after the change.
 
 .The following Project properties have specifically enumerated values:
-superScale:: 
+superScale::
 The property value is an enumerated integer between 0 and 3 with these meanings: 0=Auto, 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x. +
 Affects:
 * x = Project:GetSetting('superScale') and Project:SetSetting('superScale', x)
 
-timelineFrameRate:: 
+timelineFrameRate::
 The property value is one of the frame rates available to the user in project settings under "Timeline frame rate" option. Drop Frame can be configured for supported frame rates by appending the frame rate with "DF", e.g. "29.97 DF" will enable drop frame and "29.97" will disable drop frame +
 Affects:
 * x = Project:GetSetting('timelineFrameRate') and Project:SetSetting('timelineFrameRate', x)
@@ -148,8 +144,3 @@ Affects:
 superScale:: The property value is an enumerated integer between 1 and 3 with these meanings: 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x.
 Affects:
 * x = MediaPoolItem:GetClipProperty('Super Scale') and MediaPoolItem:SetClipProperty('Super Scale', x)
-
-
-<<<
-
-include::Formatted Deprecated Resolve API Functions.adoc[]
