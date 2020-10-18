@@ -6,13 +6,38 @@
 == Basic Resolve API
 
 === Resolve
+
+[options="header"]
 |===
+| Method | Return Type | Comment
 | `Fusion()`   | `Fusion` | Returns the Fusion object. Starting point for Fusion scripts.
 | `GetMediaStorage()`| `MediaStorage` | Returns media storage object to query and act on media locations.
 | `GetProjectManager()` `ProjectManager` | Returns project manager object for currently open database.
 | `OpenPage(pageName)` | `None` |  Switches to indicated page in DaVinci Resolve. Input can be one of ("media", "cut", "edit", "fusion", "color", "fairlight", "deliver").
 |===
 
+
+=== ProjectManager
+
+[options="header"]
+|===
+| Method | Return Type | Comment
+|`CreateProject(projectName)`          |`Project`           | Creates and returns a project if projectName (text) is unique, and None if it is not.
+|`DeleteProject(projectName)`          |`Bool`              | Delete project in the current folder if not currently loaded.
+|`LoadProject(projectName)`            |`Project`           | Loads and returns the project with name = projectName (text) if there is a match found, and None if there is no matching Project.
+|`GetCurrentProject()`                   |`Project`            | Returns the currently loaded Resolve project.
+|`SaveProject()`                         |`Bool`               | Saves the currently loaded project with its own name. Returns True if successful.
+|`CloseProject(project)`                 |`Bool`               | Closes the specified project without saving.
+|`CreateFolder(folderName)`              |`Bool`               | Creates a folder if folderName (text) is unique.
+|`GetProjectListInCurrentFolder()`       |`[project names...]` | Returns a list of project names in current folder.
+|`GetFolderListInCurrentFolder()`        |`[folder names...]`  | Returns a list of folder names in current folder.
+|`GotoRootFolder()`                      |`Bool`               | Opens root folder in database.
+|`GotoParentFolder()`                    |`Bool`               | Opens parent folder of current folder in database if current folder has parent.
+|`OpenFolder(folderName)`                |`Bool`               | Opens folder under given name.
+|`ImportProject(filePath)`               |`Bool`               | Imports a project under given file path. Returns true in case of success.
+|`ExportProject(projectName, filePath)`  |`Bool`               | Exports a project based on given name into provided file path. Returns true in case of success.
+|`RestoreProject(filePath)`              |`Bool`               | Restores a project under given backup file path. Returns true in case of success.
+|===
 
 == About This Document
 This document is a formatted copy of the official BlackmagicDesign DaVinci Resolve scripting documentation. +
