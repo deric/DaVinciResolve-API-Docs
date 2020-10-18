@@ -115,7 +115,7 @@ allowing scripting access from outside of the Resolve application.
 |===
 
 
-MediaPool
+=== MediaPool
 [options="header"]
 |===
 | Method                                          | Return Type     | Comment
@@ -136,6 +136,17 @@ MediaPool
 |`MoveClips([clips], targetFolder)`               |`Bool`  |Moves specified clips to target folder.
 |`MoveFolders([folders], targetFolder)`           |`Bool`  |Moves specified folders to target folder.
 |===
+
+=== Folder
+
+[options="header"]
+|===
+| Method                  | Return Type   | Comment
+| `GetClipList()`         |`[clips...]`   |Returns a list of clips (items) within the folder.
+| `GetName()`             |`string`       |Returns user-defined name of the folder.
+| `GetSubFolderList()`    |`[folders...]` |Returns a list of subfolders in the folder.
+|===
+
 
 
 == Using a script
