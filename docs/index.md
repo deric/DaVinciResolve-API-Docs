@@ -16,10 +16,10 @@ WARNING: Keep in mind that this document might contain errors and might not be u
 If in doubt, always consult the official Resolve documentation provided by BlackmagicDesign.
 
 
-In this package, you will find a brief introduction to the Scripting API for DaVinci Resolve Studio. Apart from this README.txt file, this package contains folders containing the basic import
-modules for scripting access (DaVinciResolve.py) and some representative examples.
+In this package, you will find a brief introduction to the Scripting API for DaVinci Resolve Studio. This package contains folders containing the basic import
+modules for scripting access (`DaVinciResolve.py`) and some representative [examples](https://github.com/deric/DaVinciResolve-API-Docs/tree/main/examples).
 
-From v16.2.0 onwards, the nodeIndex parameters accepted by SetLUT() and SetCDL() are 1-based instead of 0-based, i.e. 1 <= nodeIndex <= total number of nodes.
+From v16.2.0 onwards, the nodeIndex parameters accepted by `SetLUT()` and `SetCDL()` are 1-based instead of 0-based, i.e. 1 <= nodeIndex <= total number of nodes.
 
 ## Overview
 
@@ -28,6 +28,8 @@ or via command line. This permission can be changed in Resolve Preferences, to b
 allowing scripting access from outside of the Resolve application.
 
 ## Basic Resolve API
+
+Deprecated methods are marked with ~~strikethrough~~.
 
 ### Resolve
 
@@ -62,6 +64,8 @@ allowing scripting access from outside of the Resolve application.
 |`ImportProject(filePath)`               |`Bool`               | Imports a project under given file path. Returns true in case of success.
 |`ExportProject(projectName, filePath)`  |`Bool`               | Exports a project based on given name into provided file path. Returns true in case of success.
 |`RestoreProject(filePath)`              |`Bool`               | Restores a project under given backup file path. Returns true in case of success.
+|~~`GetProjectsInCurrentFolder()`~~   |`{project names...}` | Returns a dict of project names in current folder.
+|~~`GetFoldersInCurrentFolder()`~~    |`{folder names...}`  | Returns a dict of folder names in current folder.
 |===
 
 ### Project
@@ -98,6 +102,9 @@ allowing scripting access from outside of the Resolve application.
 |`GetRenderCodecs(renderFormat)`                       |`{render codecs...}`| Returns a dict (codec description -> codec name) of available codecs for given render format (string).
 |`GetCurrentRenderFormatAndCodec()`                    |`{format, codec}`   | Returns a dict with currently selected format 'format' and render codec 'codec'.
 |`SetCurrentRenderFormatAndCodec(format, codec)`       |`Bool`              | Sets given render format (string) and render codec (string) as options for rendering.
+|~~`GetPresets()`~~         |`{presets...}`     | Returns a dict of presets and their information.
+|~~`GetRenderJobs()`~~      |`{render jobs...}` | Returns a dict of render jobs and their information.
+|~~`GetRenderPresets()`~~   |`{presets...}`     | Returns a dict of render presets and their information.
 |===
 
 
@@ -113,6 +120,11 @@ allowing scripting access from outside of the Resolve application.
 |`RevealInStorage(path)`                     | `None`        | Expands and displays a given file/folder path in Resolve’s Media Storage.
 |`AddItemListToMediaPool(item1, item2, ...)` | `[clips...]`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a list of the MediaPoolItems created.
 |`AddItemListToMediaPool([items...])`        | `[clips...]`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a list of the MediaPoolItems created.
+|~~`GetMountedVolumes()`~~                     |`{paths...}`  | Returns a dict of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.
+|~~`GetSubFolders(folderPath)`~~               |`{paths...}`  | Returns a dict of folder paths in the given absolute folder path.
+|~~`GetFiles(folderPath)`~~                    |`{paths...}`  | Returns a dict of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.
+|~~`AddItemsToMediaPool(item1, item2, ...)`~~  |`{clips...}`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a dict of the MediaPoolItems created.
+|~~`AddItemsToMediaPool([items...])`~~         |`{clips...}`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a dict of the MediaPoolItems created.
 |===
 
 
@@ -147,6 +159,8 @@ allowing scripting access from outside of the Resolve application.
 | `GetClipList()`         |`[clips...]`   |Returns a list of clips (items) within the folder.
 | `GetName()`             |`string`       |Returns user-defined name of the folder.
 | `GetSubFolderList()`    |`[folders...]` |Returns a list of subfolders in the folder.
+|~~`GetClips()`~~                      |`{clips...}`    | Returns a dict of clips (items) within the folder.
+|~~`GetSubFolders()`~~                  |`{folders...}`  | Returns a dict of subfolders in the folder.
 |===
 
 
@@ -165,6 +179,7 @@ allowing scripting access from outside of the Resolve application.
 |`AddFlag(color)`                                   |`Bool`             | Adds a flag with given color (text).
 |`GetFlagList()`                                    |`[colors...]`      | Returns a list of flag colors assigned to the item.
 |`ClearFlags(color)`                                |`Bool`             | Clears the flag of specified color from an item. If "All" argument is provided, all flags will be cleared.
+|~~`GetFlags()`~~                      | `{colors...}`    | Returns a dict of flag colors assigned to the item.
 |`GetClipColor()`                                   |`string`           | Returns an item color as a string.
 |`SetClipColor(colorName)`                          |`Bool`             | Sets color of an item based on the colorName (string).
 |`ClearClipColor()`                                 |`Bool`             | Clears clip color of an item.
@@ -195,6 +210,7 @@ allowing scripting access from outside of the Resolve application.
 |`GetCurrentClipThumbnailImage()`                        |`{thumbnailData}` | Returns a dict (keys "width", "height", "format" and "data") with data containing raw thumbnail image data (RGB 8-bit image data encoded in base64 format) for current media in the Color Page. Example is provided in 6_get_current_media_thumbnail.py in Example folder.
 |`GetTrackName(trackType, trackIndex)`                  |`string`          | Returns name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 <= trackIndex <= GetTrackCount(trackType).
 |`SetTrackName(trackType, trackIndex, name)`            |`Bool`            | Sets name of specified track. trackType is one of "audio", "video" and "subtitle". Valid trackIndex is in the range 1 <= trackIndex <= GetTrackCount(trackType).
+|~~`GetItemsInTrack(trackType, index)`~~   |`{items...}`  | Returns a dict of Timeline items on the video or audio track (based on trackType) at specified
 |===
 
 ### TimelineItem
@@ -247,6 +263,9 @@ allowing scripting access from outside of the Resolve application.
 |`SelectTakeByIndex(idx)`                             |`Bool`            | Selects a take by index, 1 <= idx <= number of takes.
 |`FinalizeTake()`                                     |`Bool`            | Finalizes take selection.
 |`CopyGrades([tgtTimelineItems])`                     |`Bool`            | Copies grade to all the items in tgtTimelineItems list. Returns true on success and false if any error occured.
+|~~`GetFusionCompNames()`~~             |`{names...}`     | Returns a dict of Fusion composition names associated with the timeline item.
+|~~`GetFlags()`~~                       |`{colors...}`    | Returns a dict of flag colors assigned to the item.
+|~~`GetVersionNames(versionType)`~~     |`{names...}`     | Returns a dict of version names by provided versionType: 0 - local, 1 - remote.
 |===
 
 
@@ -361,78 +380,3 @@ The following Clip properties have specifically enumerated values:
 superScale:: The property value is an enumerated integer between 1 and 3 with these meanings: 1=no scaling, and 2, 3 and 4 represent the Super Scale multipliers 2x, 3x and 4x.
 Affects:
 * x = MediaPoolItem:GetClipProperty('Super Scale') and MediaPoolItem:SetClipProperty('Super Scale', x)
-
-
-## Deprecated Resolve API Functions
-
-
-
-The following API functions are deprecated.
-
-### ProjectManager
-
-|---
-| Method                           | Return Type      | Comment
-|---
-|`GetProjectsInCurrentFolder()`   |`{project names...}` | Returns a dict of project names in current folder.
-|`GetFoldersInCurrentFolder()`    |`{folder names...}`  | Returns a dict of folder names in current folder.
-|===
-
-
-### Project
-
-|---
-| Method                           | Return Type      | Comment
-|---
-|`GetPresets()`         |`{presets...}`     | Returns a dict of presets and their information.
-|`GetRenderJobs()`      |`{render jobs...}` | Returns a dict of render jobs and their information.
-|`GetRenderPresets()`   |`{presets...}`     | Returns a dict of render presets and their information.
-|===
-
-
-### MediaStorage
-
-|---
-| Method                           | Return Type      | Comment
-|---
-|`GetMountedVolumes()                     |`{paths...}`  | Returns a dict of folder paths corresponding to mounted volumes displayed in Resolve’s Media Storage.
-|`GetSubFolders(folderPath)               |`{paths...}`  | Returns a dict of folder paths in the given absolute folder path.
-|`GetFiles(folderPath)                    |`{paths...}`  | Returns a dict of media and file listings in the given absolute folder path. Note that media listings may be logically consolidated entries.
-|`AddItemsToMediaPool(item1, item2, ...)  |`{clips...}`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is one or more file/folder paths. Returns a dict of the MediaPoolItems created.
-|`AddItemsToMediaPool([items...])         |`{clips...}`  | Adds specified file/folder paths from Media Storage into current Media Pool folder. Input is an array of file/folder paths. Returns a dict of the MediaPoolItems created.
-|===
-
-
-### Folder
-
-|---
-| Method                           | Return Type     | Comment
-|---
-|`GetClips()`                       |`{clips...}`    | Returns a dict of clips (items) within the folder.
-|`GetSubFolders()`                  |`{folders...}`  | Returns a dict of subfolders in the folder.
-|===
-
-### MediaPoolItem
-
-|---
-| Method                           | Return Type      | Comment
-|---
-|`GetFlags()`                      | `{colors...}`    | Returns a dict of flag colors assigned to the item.
-|===
-
-### Timeline
-
-|---
-| Method                           | Return Type      | Comment
-|---
-|`GetItemsInTrack(trackType, index)`   |`{items...}`  | Returns a dict of Timeline items on the video or audio track (based on trackType) at specified
-|===
-
-### TimelineItem
-
-|---
-| Method                           | Return Type      | Comment
-|---
-|`GetFusionCompNames()`             |`{names...}`     | Returns a dict of Fusion composition names associated with the timeline item.
-|`GetFlags()`                       |`{colors...}`    | Returns a dict of flag colors assigned to the item.
-|`GetVersionNames(versionType)`     |`{names...}`     | Returns a dict of version names by provided versionType: 0 - local, 1 - remote.
